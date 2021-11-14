@@ -1,0 +1,46 @@
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const notes = require('../routes/teacher/notes');
+const books = require('../routes/books');
+const getBooks = require('../routes/getBooks');
+const getNotes = require('../routes/getNotes');
+const users = require('../routes/users');
+const bookingsAdmin = require('../routes/admin/getBookings');
+const personalBooking = require('../routes/admin/bookings');
+const userBookings = require('../routes/userBookings');
+const userLogin = require('../routes/login');
+const adminLogin = require('../routes/admin/login');
+const adminRegister = require('../routes/admin/register');
+const bookReturn = require('../routes/admin/getReturnBook');
+const confirmedBookings = require('../routes/admin/confirmedBookings');
+const librarianLanding = require('../routes/admin/landing');
+const userProfile = require('../routes/userProfile');
+const note = require('../routes/teacher/upload');
+const auth = require('../middleware/auth');
+
+module.exports = function(app){
+    app.set('view engine', 'ejs');
+    app.use(express.static('public'));
+    app.use(express.json());
+    app.use(express.urlencoded({extended:true}));
+    app.use(cookieParser());
+    app.use('/api/notes', notes);
+    app.use('/api/uploadbooks', books);
+    app.use('/api/users/books', getBooks);
+    app.use('api/users/books', getBooks);
+    app.use('/api/users/notes', getNotes);
+    app.use('/api/users', users);
+    app.get('/dashboard',auth,(req,res)=>{res.render('userValid')});
+    app.get('/', async(req,res)=>{res.render('dashboardMukid')});
+    app.use('/myProfile', userProfile);
+    app.use('/api/users/books', userBookings);
+    app.use('/api/librarian/allbooking', bookingsAdmin);
+    app.use('/api/librarian/confirm', personalBooking);
+    app.use('/api/users/login', userLogin);
+    app.use('/api/admin/login', adminLogin);
+    app.use('/api/admin/register', adminRegister);
+    app.use('/api/librarian/book/return', bookReturn);
+    app.use('/api/librarian/confirmedBookings', confirmedBookings);
+    app.use('/api/librarian', librarianLanding);
+    app.use('/api/teacher/upload', note);
+}
